@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
-import 'services/camera_service.dart';
+import 'package:task_manager/services/camera_service.dart';
 import 'screens/task_list_screen.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() async {
+  // Inicializa o FFI (obrigatório para desktop)
+  sqfliteFfiInit();
+
+  // Define o databaseFactory global para o desktop
+  databaseFactory = databaseFactoryFfi;
+
   WidgetsFlutterBinding.ensureInitialized();
   
   // Inicializar câmera
@@ -25,10 +32,10 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.light,
         ),
         useMaterial3: true,
-        cardTheme: CardTheme(
+        cardTheme: const CardThemeData(
           elevation: 2,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.all(Radius.circular(12)),
           ),
         ),
       ),

@@ -3,6 +3,7 @@ import '../models/task.dart';
 import '../services/database_service.dart';
 import '../services/sensor_service.dart';
 import '../services/location_service.dart';
+import '../services/camera_service.dart';
 import '../screens/task_form_screen.dart';
 import '../widgets/task_card.dart';
 

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-
+import 'services/camera_service.dart';
 import 'screens/task_list_screen.dart';
 
-void main() {
-  sqfliteFfiInit();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   
-  databaseFactory = databaseFactoryFfi;
-
+  // Inicializar câmera
+  await CameraService.instance.initialize();
+  
   runApp(const MyApp());
 }
 
@@ -25,18 +25,11 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.light,
         ),
         useMaterial3: true,
-        cardTheme: const CardThemeData(  // ← CardThemeData ao invés de CardTheme
+        cardTheme: CardTheme(
           elevation: 2,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
+            borderRadius: BorderRadius.circular(12),
           ),
-        ),
-        inputDecorationTheme: const InputDecorationTheme(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
-          filled: true,
-          fillColor: Color(0xFFF5F5F5), // Colors.grey.shade50
         ),
       ),
       home: const TaskListScreen(),

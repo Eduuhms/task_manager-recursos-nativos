@@ -172,7 +172,7 @@ class TaskCard extends StatelessWidget {
                             ),
                             
                             // Foto
-                            if (task.hasPhoto)
+                            if (task.hasPhotos)
                               Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 8,
@@ -292,14 +292,14 @@ class TaskCard extends StatelessWidget {
             ),
             
             // PREVIEW DA FOTO
-            if (task.hasPhoto)
+            if (task.hasPhotos && task.firstPhoto != null)
               ClipRRect(
                 borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(12),
                   bottomRight: Radius.circular(12),
                 ),
                 child: Image.file(
-                  File(task.photoPath!),
+                  File(task.firstPhoto!),
                   width: double.infinity,
                   height: 180,
                   fit: BoxFit.cover,

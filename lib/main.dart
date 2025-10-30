@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/services/camera_service.dart';
+import 'dart:io' show Platform;
 import 'screens/task_list_screen.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -12,8 +13,12 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Inicializar câmera
-  await CameraService.instance.initialize();
+  // Inicializar câmera somente em mobile (evita MissingPluginException no desktop)
+  if (Platform.isAndroid || Platform.isIOS) {
+    await CameraService.instance.initialize();
+  } else {
+    print('⚠️ Câmera não inicializada: plataforma não suportada para plugin de câmera.');
+  }
   
   runApp(const MyApp());
 }

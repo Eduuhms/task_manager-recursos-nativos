@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io' show File, Directory;
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:path_provider/path_provider.dart';
@@ -73,18 +73,23 @@ class CameraService {
     }
   }
 
-  Future<String> savePicture(XFile image) async {
+  /// Accepts either an [XFile] (from camera/image_picker) or a [String]
+  /// path to an existing file (e.g. from file_picker). Returns the
+  /// path to the copied file inside the app documents/images folder.
+  Future<String> savePicture(dynamic imageOrPath) async {
     try {
+      final sourcePath = imageOrPath is String ? imageOrPath : imageOrPath.path as String;
+
       final appDir = await getApplicationDocumentsDirectory();
-      final fileName = 'task_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final fileName = 'task_${DateTime.now().millisecondsSinceEpoch}${path.extension(sourcePath)}';
       final savePath = path.join(appDir.path, 'images', fileName);
-      
+
       final imageDir = Directory(path.join(appDir.path, 'images'));
       if (!await imageDir.exists()) {
         await imageDir.create(recursive: true);
       }
-      
-      final savedImage = await File(image.path).copy(savePath);
+
+      final savedImage = await File(sourcePath).copy(savePath);
       print('✅ Foto salva: ${savedImage.path}');
       return savedImage.path;
     } catch (e) {

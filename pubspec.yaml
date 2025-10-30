@@ -43,6 +43,9 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   path_provider: ^2.0.11
+  image_picker: ^0.8.7+5
+  file_picker: ^5.2.5
+  google_maps_flutter: ^2.2.5
 
 dev_dependencies:
   flutter_test:

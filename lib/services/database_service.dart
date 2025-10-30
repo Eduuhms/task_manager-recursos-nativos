@@ -21,7 +21,7 @@ class DatabaseService {
 
     return await openDatabase(
       path,
-      version: 4,  // VERSÃO FINAL COM TODOS OS CAMPOS
+      version: 5,  // bump version to add photoPaths
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
     );
@@ -40,12 +40,13 @@ class DatabaseService {
         priority $textType,
         completed $intType,
         createdAt $textType,
-        photoPath TEXT,
+        photoPaths TEXT,
         completedAt TEXT,
         completedBy TEXT,
         latitude REAL,
         longitude REAL,
-        locationName TEXT
+        locationName TEXT,
+        photoPath TEXT
       )
     ''');
   }
@@ -63,6 +64,26 @@ class DatabaseService {
       await db.execute('ALTER TABLE tasks ADD COLUMN latitude REAL');
       await db.execute('ALTER TABLE tasks ADD COLUMN longitude REAL');
       await db.execute('ALTER TABLE tasks ADD COLUMN locationName TEXT');
+    }
+    if (oldVersion < 5) {
+      // Add photoPaths column to store JSON array of strings. Keep photoPath for
+      // backward compatibility and migrate existing values.
+      await db.execute('ALTER TABLE tasks ADD COLUMN photoPaths TEXT');
+      // Migrate legacy photoPath into photoPaths JSON
+      try {
+        final rows = await db.query('tasks', columns: ['id', 'photoPath']);
+        for (final row in rows) {
+          final id = row['id'];
+          final p = row['photoPath'] as String?;
+          if (p != null && p.isNotEmpty) {
+            final json = '["' + p.replaceAll('"', '\\"') + '"]';
+            await db.update('tasks', {'photoPaths': json}, where: 'id = ?', whereArgs: [id]);
+          }
+        }
+      } catch (e) {
+        // ignore migration errors, keep app running
+        print('⚠️ Erro migrando photoPath para photoPaths: $e');
+      }
     }
     print('✅ Banco migrado de v$oldVersion para v$newVersion');
   }

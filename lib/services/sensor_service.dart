@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
+import 'dart:io' show Platform;
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:vibration/vibration.dart';
 
@@ -19,14 +20,20 @@ class SensorService {
   bool get isActive => _isActive;
 
   void startShakeDetection(Function() onShake) {
+    // Only enable shake detection on mobile platforms
+    if (!(Platform.isAndroid || Platform.isIOS)) {
+      print('⚠️ Detecção de shake não ativada: plataforma não suportada.');
+      return;
+    }
+
     if (_isActive) {
       print('⚠️ Detecção já ativa');
       return;
     }
-    
+
     _onShake = onShake;
     _isActive = true;
-    
+
     _accelerometerSubscription = accelerometerEvents.listen(
       (AccelerometerEvent event) {
         _detectShake(event);
@@ -35,7 +42,7 @@ class SensorService {
         print('❌ Erro no acelerômetro: $error');
       },
     );
-    
+
     print('📱 Detecção de shake iniciada');
   }
 

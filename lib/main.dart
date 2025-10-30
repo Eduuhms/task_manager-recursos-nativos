@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:task_manager/services/camera_service.dart';
 import 'dart:io' show Platform;
 import 'screens/task_list_screen.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+// import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() async {
   // Inicializa o FFI (obrigatório para desktop)
-  sqfliteFfiInit();
+  // sqfliteFfiInit();
 
   // Define o databaseFactory global para o desktop
-  databaseFactory = databaseFactoryFfi;
+  // databaseFactory = databaseFactoryFfi;
 
   WidgetsFlutterBinding.ensureInitialized();
   
